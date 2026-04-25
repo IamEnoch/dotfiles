@@ -5,7 +5,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(zsh nvim wezterm omp)
+PACKAGES=(zsh nvim wezterm omp agents claude)
 
 echo "Starting dotfiles installation from $DOTFILES_DIR"
 

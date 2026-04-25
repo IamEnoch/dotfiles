@@ -1,0 +1,22 @@
+[
+  {"query": "create an excalidraw diagram showing our system architecture - frontend, API gateway, microservices, and databases", "should_trigger": true},
+  {"query": "I need a visual diagram of our data pipeline, something I can edit in excalidraw - show the ETL stages with actual data format examples", "should_trigger": true},
+  {"query": "draw me a whiteboard-style architecture diagram for our event-driven system, with kafka, consumers, and the state store", "should_trigger": true},
+  {"query": "make an excalidraw file showing the user journey through our checkout flow, from cart to payment confirmation", "should_trigger": true},
+  {"query": "visualize the relationship between our React components as a hand-drawn style diagram, showing props flow and state management", "should_trigger": true},
+  {"query": "I want to create a technical diagram that explains our auth flow - show actual JWT payload examples and the token refresh cycle", "should_trigger": true},
+  {"query": "create a visual comparison diagram showing monolith vs microservices architecture for our migration planning", "should_trigger": true},
+  {"query": "generate an .excalidraw diagram of our kubernetes cluster layout - namespaces, services, ingress, with real resource names", "should_trigger": true},
+  {"query": "draw a concept map showing how our ML pipeline works - data ingestion through model serving, include actual S3 paths and SageMaker endpoints", "should_trigger": true},
+  {"query": "make a diagram that argues why we should adopt event sourcing - show the before/after architecture with concrete examples", "should_trigger": true},
+  {"query": "read the file at src/utils/helpers.ts and tell me what the formatDate function does", "should_trigger": false},
+  {"query": "write a Python script that parses CSV files and outputs JSON, handle missing values gracefully", "should_trigger": false},
+  {"query": "fix the bug in my React component - the useEffect is running on every render instead of just on mount", "should_trigger": false},
+  {"query": "create a mermaid sequence diagram showing the auth flow between frontend and backend", "should_trigger": false},
+  {"query": "help me write a flowchart in mermaid syntax for our approval workflow", "should_trigger": false},
+  {"query": "review this PR and tell me if there are any security issues with the SQL queries", "should_trigger": false},
+  {"query": "help me write unit tests for the UserService class using Jest and mock the database calls", "should_trigger": false},
+  {"query": "set up prettier and eslint for our TypeScript project with the recommended config", "should_trigger": false},
+  {"query": "explain the difference between OAuth2 authorization code flow and implicit flow", "should_trigger": false},
+  {"query": "create a Docker compose file for local development with postgres, redis, and our node app", "should_trigger": false}
+]

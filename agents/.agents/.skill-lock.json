@@ -1,0 +1,34 @@
+{
+  "version": 3,
+  "skills": {
+    "docx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/docx/SKILL.md",
+      "skillFolderHash": "a0d216202f9793a78da44cf96aabe48f42e627ac",
+      "pluginName": "document-skills",
+      "installedAt": "2026-04-25T14:54:48.663Z",
+      "updatedAt": "2026-04-25T14:54:48.663Z"
+    },
+    "nuget-manager": {
+      "source": "JSdotNet/Copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JSdotNet/Copilot.git",
+      "skillPath": "plugins/development/skills/nuget-manager/SKILL.md",
+      "skillFolderHash": "3abad915129c68bdc864ac0653805413e4b14cd8",
+      "installedAt": "2026-04-25T14:57:50.249Z",
+      "updatedAt": "2026-04-25T14:57:50.249Z"
+    },
+    "excalidraw-diagram": {
+      "source": "petermcalister/shared-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/petermcalister/shared-skills.git",
+      "skillPath": ".claude/skills/excalidraw-diagram/SKILL.md",
+      "skillFolderHash": "bfa4165e9f7c5b8990654c4ff98319ee42362ca9",
+      "installedAt": "2026-04-25T14:58:05.293Z",
+      "updatedAt": "2026-04-25T14:58:05.293Z"
+    }
+  },
+  "dismissed": {}
+}

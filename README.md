@@ -10,6 +10,7 @@ This repository contains configuration files for:
 - **Neovim** – NvChad-derived editor config
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
+- **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
 VS Code is intentionally not tracked here — its built-in Settings Sync handles that in the cloud.
 
@@ -17,6 +18,13 @@ VS Code is intentionally not tracked here — its built-in Settings Sync handles
 
 ```text
 dotfiles/
+├── agents/
+│   └── .agents/
+│       ├── .skill-lock.json                         # npx skills lockfile
+│       └── skills/                                  # Installed agent skills
+├── claude/
+│   └── .claude/
+│       └── skills -> ../../agents/.agents/skills    # Symlink to shared store
 ├── nvim/
 │   └── .config/nvim/                                # Neovim (NvChad) config tree
 ├── omp/
@@ -78,11 +86,13 @@ sudo apt install stow
 
    ```bash
    # Install all configurations
-   stow -vt ~ nvim omp wezterm zsh
+   stow -vt ~ agents claude nvim omp wezterm zsh
    ```
 
    ```bash
    # Or install specific configurations
+   stow -vt ~ agents
+   stow -vt ~ claude
    stow -vt ~ nvim
    stow -vt ~ omp
    stow -vt ~ wezterm
@@ -102,17 +112,36 @@ sudo apt install stow
    exec zsh
    ```
 
+## Managing agent skills
+
+Skills are installed via [`npx skills`](https://github.com/vercel-labs/skills) and land in `~/.agents/skills/` (which stow points back into this repo). The `~/.claude/skills` symlink exposes the same store to Claude Code globally.
+
+```bash
+# Add a skill
+npx skills add <org/repo> -g -s <skill-name> -a claude-code -a codex -y
+
+# Update all installed skills
+npx skills update -g -y
+
+# List installed skills
+npx skills list
+```
+
+After adding/updating, commit the changes in `agents/.agents/`.
+
 ## Uninstallation
 
 To remove symlinks created by stow:
 
 ```bash
 cd ~/dotfiles
+stow -Dvt ~ agents
+stow -Dvt ~ claude
 stow -Dvt ~ nvim
 stow -Dvt ~ omp
 stow -Dvt ~ wezterm
 stow -Dvt ~ zsh
 
 # Or uninstall all packages at once
-stow -Dvt ~ nvim omp wezterm zsh
+stow -Dvt ~ agents claude nvim omp wezterm zsh
 ```
