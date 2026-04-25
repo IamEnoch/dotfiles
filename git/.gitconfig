@@ -1,0 +1,25 @@
+[user]
+	name = Enoch M
+	email = enoch.mwangi@outlook.com
+	signingKey = ~/.ssh/git_signing_ed25519.pub
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[commit]
+	gpgSign = true
+[tag]
+	gpgSign = true
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.config/git/allowed_signers
+[core]
+	autocrlf = input
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
