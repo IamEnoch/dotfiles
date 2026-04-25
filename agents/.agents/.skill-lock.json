@@ -28,6 +28,62 @@
       "skillFolderHash": "bfa4165e9f7c5b8990654c4ff98319ee42362ca9",
       "installedAt": "2026-04-25T14:58:05.293Z",
       "updatedAt": "2026-04-25T14:58:05.293Z"
+    },
+    "dotnet-backend-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/wshobson/agents.git",
+      "skillPath": "plugins/dotnet-contribution/skills/dotnet-backend-patterns/SKILL.md",
+      "skillFolderHash": "a29c731f9dbc92830144cec34b276b8278468f75",
+      "installedAt": "2026-04-25T18:58:10.694Z",
+      "updatedAt": "2026-04-25T18:58:10.694Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "skillFolderHash": "928950704df8a8b885c03de5da626331e6f29cf8",
+      "pluginName": "example-skills",
+      "installedAt": "2026-04-25T18:58:26.043Z",
+      "updatedAt": "2026-04-25T18:58:26.043Z"
+    },
+    "next-best-practices": {
+      "source": "vercel-labs/next-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/next-skills.git",
+      "skillPath": "skills/next-best-practices/SKILL.md",
+      "skillFolderHash": "ad17eb27952b39a6ab0061bd50e8a2213b63a3ec",
+      "installedAt": "2026-04-25T18:58:41.189Z",
+      "updatedAt": "2026-04-25T18:58:41.189Z"
+    },
+    "SVG Logo Designer": {
+      "source": "rknall/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/rknall/claude-skills.git",
+      "skillPath": "svg-logo-designer/SKILL.md",
+      "skillFolderHash": "d32ceba96946d695a40d7be78cc144d8ee7a6ac5",
+      "installedAt": "2026-04-25T18:59:37.506Z",
+      "updatedAt": "2026-04-25T18:59:37.506Z"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/supabase/agent-skills.git",
+      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
+      "skillFolderHash": "1ee0423a38c358caa23150dfaaed01bbae020bea",
+      "pluginName": "postgres-best-practices",
+      "installedAt": "2026-04-25T18:59:52.572Z",
+      "updatedAt": "2026-04-25T18:59:52.572Z"
+    },
+    "aspire": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/awesome-copilot.git",
+      "skillPath": "skills/aspire/SKILL.md",
+      "skillFolderHash": "afafff53a657a959d83109b5da558426126eec74",
+      "installedAt": "2026-04-25T19:02:00.000Z",
+      "updatedAt": "2026-04-25T19:02:00.000Z"
     }
   },
   "dismissed": {}
