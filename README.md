@@ -13,8 +13,6 @@ This repository contains configuration files for:
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
 - **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
-VS Code is intentionally not tracked here — its built-in Settings Sync handles that in the cloud.
-
 ## Structure
 
 ```text
