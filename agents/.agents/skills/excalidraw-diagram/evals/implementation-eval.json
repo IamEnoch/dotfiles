@@ -1,0 +1,72 @@
+{
+  "skill_name": "excalidraw-diagram",
+  "evals": [
+    {
+      "id": 1,
+      "name": "simple-architecture-diagram",
+      "prompt": "Create an excalidraw diagram showing a simple 3-tier architecture: Web Browser -> API Server -> Database. Use appropriate shapes and colors from the color palette.",
+      "expected_output": "A valid .excalidraw JSON file with at least 3 shapes, 2 arrows, and text labels",
+      "assertions": [
+        {"text": "Output is valid JSON", "type": "json_valid"},
+        {"text": "Has type 'excalidraw'", "type": "json_field_equals", "path": "type", "value": "excalidraw"},
+        {"text": "Has at least 6 elements (3 shapes + text labels)", "type": "json_array_min_length", "path": "elements", "min": 6},
+        {"text": "Contains rectangle elements", "type": "json_array_contains", "path": "elements[*].type", "value": "rectangle"},
+        {"text": "Contains arrow elements", "type": "json_array_contains", "path": "elements[*].type", "value": "arrow"},
+        {"text": "Contains text elements", "type": "json_array_contains", "path": "elements[*].type", "value": "text"},
+        {"text": "Uses colors from the palette (not random hex)", "type": "content_match", "pattern": "#3b82f6|#1e3a5f|#fed7aa|#a7f3d0|#ddd6fe"},
+        {"text": "All elements have opacity 100", "type": "json_all_match", "path": "elements[*].opacity", "value": 100}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "fan-out-pattern",
+      "prompt": "Create an excalidraw diagram showing a fan-out pattern: a central 'Event Bus' node with arrows radiating out to 5 consumer services (Email, SMS, Push, Webhook, Analytics). Use the Start/Trigger color for the event bus.",
+      "expected_output": "A .excalidraw file with 1 central element and 5+ arrows fanning out",
+      "assertions": [
+        {"text": "Valid excalidraw JSON", "type": "json_valid"},
+        {"text": "Has at least 5 arrow elements", "type": "json_array_count_min", "path": "elements[?type=='arrow']", "min": 5},
+        {"text": "Arrows have endArrowhead set", "type": "content_contains", "value": "\"endArrowhead\": \"arrow\""},
+        {"text": "Contains all 5 service names in text", "type": "content_contains_all", "values": ["Email", "SMS", "Push", "Webhook", "Analytics"]},
+        {"text": "Uses Start/Trigger fill color", "type": "content_contains", "value": "#fed7aa"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "container-binding-correctness",
+      "prompt": "Create an excalidraw diagram with 3 labeled rectangles: 'Frontend', 'Backend', 'Database'. Each must have text centered inside. Connect them left to right with arrows.",
+      "expected_output": "A .excalidraw file where text elements have containerId pointing to their parent shapes",
+      "assertions": [
+        {"text": "Valid excalidraw JSON", "type": "json_valid"},
+        {"text": "Text elements have containerId set", "type": "content_match", "pattern": "\"containerId\":\\s*\"[^\"]+\""},
+        {"text": "Shapes have boundElements referencing text", "type": "content_contains", "value": "\"type\": \"text\""},
+        {"text": "Arrow startBinding references a shape", "type": "content_contains", "value": "\"startBinding\""},
+        {"text": "Arrow endBinding references a shape", "type": "content_contains", "value": "\"endBinding\""},
+        {"text": "Uses fontFamily 3", "type": "content_contains", "value": "\"fontFamily\": 3"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "section-by-section-large-diagram",
+      "prompt": "Create an excalidraw diagram of a CI/CD pipeline with 4 sections: Source (GitHub PR), Build (Docker + tests), Deploy (staging then prod), and Monitor (Grafana + alerts). This should be comprehensive with at least 12 elements total.",
+      "expected_output": "A .excalidraw file built section-by-section with descriptive IDs and 12+ elements",
+      "assertions": [
+        {"text": "Valid excalidraw JSON", "type": "json_valid"},
+        {"text": "Has at least 12 elements", "type": "json_array_min_length", "path": "elements", "min": 12},
+        {"text": "Uses descriptive string IDs (not random)", "type": "content_match", "pattern": "\"id\":\\s*\"[a-z_]+\""},
+        {"text": "No overlapping x coordinates for major shapes", "type": "custom", "note": "Visual inspection needed"},
+        {"text": "roughness is 0 for clean style", "type": "content_contains", "value": "\"roughness\": 0"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "render-produces-png",
+      "prompt": "Create a simple excalidraw diagram with 2 rectangles connected by an arrow, then render it to PNG using the render script.",
+      "expected_output": "Both a .excalidraw JSON file and a rendered .png file",
+      "assertions": [
+        {"text": ".excalidraw file exists", "type": "file_exists", "pattern": "*.excalidraw"},
+        {"text": ".png file exists", "type": "file_exists", "pattern": "*.png"},
+        {"text": "PNG file has non-zero size", "type": "file_min_size", "pattern": "*.png", "min_bytes": 1000}
+      ]
+    }
+  ]
+}
