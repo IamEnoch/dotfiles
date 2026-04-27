@@ -84,6 +84,15 @@
       "skillFolderHash": "afafff53a657a959d83109b5da558426126eec74",
       "installedAt": "2026-04-25T19:02:00.000Z",
       "updatedAt": "2026-04-25T19:02:00.000Z"
+    },
+    "to-prd": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "to-prd/SKILL.md",
+      "skillFolderHash": "e031bc9bba9b213f044ee59f3fd4ff2feeacbaf6",
+      "installedAt": "2026-04-27T18:36:18.534Z",
+      "updatedAt": "2026-04-27T18:36:18.534Z"
     }
   },
   "dismissed": {}
