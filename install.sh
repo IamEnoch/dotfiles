@@ -70,3 +70,4 @@ cd "$DOTFILES_DIR"
 stow -vt "$HOME" "${PACKAGES[@]}"
 
 echo "Done. Open a new terminal."
+echo "Next: run 'codex' once to sign in (ChatGPT account or API key)."
