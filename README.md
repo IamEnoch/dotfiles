@@ -116,17 +116,26 @@ sudo apt install stow
 
 ## Managing agent skills
 
-Skills are installed via [`npx skills`](https://github.com/vercel-labs/skills) and land in `~/.agents/skills/` (which stow points back into this repo). The `~/.claude/skills` symlink exposes the same store to Claude Code globally.
+Skills are installed via [`npx skills`](https://github.com/vercel-labs/skills) and land in `~/.agents/skills/` (which stow points back into this repo). The `~/.claude/skills` symlink exposes the same store to Claude Code globally, and Codex also reads the shared store from this checkout.
+
+Currently tracked skills include:
+
+- `aspire` from `github/awesome-copilot` for .NET Aspire CLI, AppHost orchestration, dashboard, MCP, integrations, and deployment work.
+- `find-docs` from `upstash/context7` for documentation lookup.
+- `docx`, `frontend-design`, `next-best-practices`, `dotnet-backend-patterns`, `nuget-manager`, `excalidraw-diagram`, `supabase-postgres-best-practices`, `SVG Logo Designer`, and `to-prd`.
 
 ```bash
 # Add a skill
 npx skills add <org/repo> -g -s <skill-name> -a claude-code -a codex -y
 
+# Restore tracked skills from the lockfile
+npx skills experimental_install
+
 # Update all installed skills
 npx skills update -g -y
 
-# List installed skills
-npx skills list
+# Verify installed global skills
+npx skills list -g
 ```
 
 After adding/updating, commit the changes in `agents/.agents/`.
