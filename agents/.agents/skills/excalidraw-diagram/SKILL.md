@@ -8,7 +8,8 @@ description: >
   the user wants diagrams with code snippets, JSON examples, or evidence artifacts embedded —
   this skill excels at educational technical diagrams. Generates .excalidraw JSON files with
   Playwright-based render-and-validate loop.
-version: 0.2.0
+metadata:
+  version: 0.2.0
 ---
 
 # Excalidraw Diagram Creator

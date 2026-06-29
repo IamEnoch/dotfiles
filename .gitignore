@@ -1,4 +1,8 @@
 .DS_Store
+git/
 *.swp
 *.swo
 *~
+__pycache__/
+*.py[cod]
+.venv/

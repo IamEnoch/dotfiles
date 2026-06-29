@@ -122,17 +122,46 @@ Currently tracked skills include:
 
 - `aspire` from `github/awesome-copilot` for .NET Aspire CLI, AppHost orchestration, dashboard, MCP, integrations, and deployment work.
 - `find-docs` from `upstash/context7` for documentation lookup.
-- `docx`, `frontend-design`, `next-best-practices`, `dotnet-backend-patterns`, `nuget-manager`, `excalidraw-diagram`, `supabase-postgres-best-practices`, `SVG Logo Designer`, and `to-prd`.
+- `docx`, `frontend-design`, `next-best-practices`, `dotnet-backend-patterns`, `nuget-manager`, `excalidraw-diagram`, `supabase-postgres-best-practices`, `svg-logo-designer`, and `to-prd`.
+
+### Update workflow
+
+For routine updates, use the short path:
+
+```bash
+cd ~/garage/personal/personalprojects/dotfiles
+npx skills update -g -y
+npx skills list -g --json
+git diff -- agents/.agents
+```
+
+If the updater says a skill was deleted upstream, it skips deletion in non-interactive mode. Review those skills manually before removing anything, because some local skills may still be useful even if the source repo moved or changed layout.
+
+Validate skill metadata before committing:
+
+```bash
+tmpdir=$(mktemp -d /tmp/skill-validate.XXXXXX)
+python3 -m venv "$tmpdir/venv"
+"$tmpdir/venv/bin/python" -m pip install --quiet PyYAML
+
+for d in agents/.agents/skills/*; do
+  [ -f "$d/SKILL.md" ] || continue
+  "$tmpdir/venv/bin/python" /home/bifrost/.codex/skills/.system/skill-creator/scripts/quick_validate.py "$d"
+done
+
+rm -rf "$tmpdir"
+```
+
+Keep only files that are part of the skill itself: `SKILL.md`, `references/`, `scripts/`, `assets/`, licenses, and lockfile data. Do not commit generated caches, virtualenvs, or upstream changelogs unless they are required by the skill at runtime.
+
+Other useful commands:
 
 ```bash
 # Add a skill
 npx skills add <org/repo> -g -s <skill-name> -a claude-code -a codex -y
 
-# Restore tracked skills from the lockfile
+# Restore tracked skills from the lockfile on a new machine
 npx skills experimental_install
-
-# Update all installed skills
-npx skills update -g -y
 
 # Verify installed global skills
 npx skills list -g
