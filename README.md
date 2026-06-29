@@ -11,6 +11,7 @@ This repository contains configuration files for:
 - **Neovim** – NvChad-derived editor config
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
+- **CopyQ** – Clipboard history manager, autostarted for desktop sessions
 - **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
 ## Structure
@@ -24,6 +25,9 @@ dotfiles/
 ├── claude/
 │   └── .claude/
 │       └── skills -> ../../agents/.agents/skills    # Symlink to shared store
+├── copyq/
+│   └── .config/autostart/
+│       └── com.github.hluk.copyq.desktop            # Start clipboard history on login
 ├── git/
 │   └── .gitconfig                                   # Git config (signing, LFS, identity)
 ├── nvim/
@@ -53,7 +57,7 @@ chmod +x install.sh
 
 The installation script will:
 
-- Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `wezterm`, `gh`
+- Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `wezterm`, `gh`, `copyq`, `wl-clipboard`
 - Install oh-my-posh and the MesloLGS Nerd Font
 - Install Node.js + npm (if missing)
 - Install the Codex CLI globally via npm
@@ -87,13 +91,14 @@ sudo apt install stow
 
    ```bash
    # Install all configurations
-   stow -vt ~ agents claude git nvim omp wezterm zsh
+   stow -vt ~ agents claude copyq git nvim omp wezterm zsh
    ```
 
    ```bash
    # Or install specific configurations
    stow -vt ~ agents
    stow -vt ~ claude
+   stow -vt ~ copyq
    stow -vt ~ git
    stow -vt ~ nvim
    stow -vt ~ omp

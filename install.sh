@@ -5,7 +5,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(zsh git nvim wezterm omp agents claude)
+PACKAGES=(zsh git nvim wezterm omp agents claude copyq)
 
 echo "Starting dotfiles installation from $DOTFILES_DIR"
 
@@ -16,7 +16,8 @@ sudo apt install -y \
   stow git curl ca-certificates build-essential \
   zsh zsh-autosuggestions zsh-syntax-highlighting \
   fzf zoxide eza bat ripgrep fd-find \
-  neovim wezterm gh
+  neovim wezterm gh \
+  copyq wl-clipboard
 
 # 2. oh-my-posh
 if ! command -v oh-my-posh &>/dev/null; then
