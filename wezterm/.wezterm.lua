@@ -116,6 +116,18 @@ config.keys = {
   key = "K",
   mods = "CTRL|SHIFT",
   action = wezterm.action.CloseCurrentPane { confirm = true },
+  },
+  -- Ctrl+Shift+Alt+$ to split left
+  {
+    key = "$",
+    mods = "CTRL|SHIFT|ALT",
+    action = wezterm.action.SplitPane { direction = 'Left' }
+  },
+  -- CTRL+Shift+Alt+: to split top
+  {
+    key = ":",
+    mods = "CTRL|SHIFT|ALT",
+    action = wezterm.action.SplitPane { direction = 'Up'}
   }
 }
 
