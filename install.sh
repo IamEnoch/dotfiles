@@ -7,16 +7,26 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGES=(zsh nvim wezterm omp agents claude copyq system)
 STOW_ONLY=false
+DRY_RUN=false
 
-case "${1:-}" in
-  --stow-only) STOW_ONLY=true; shift ;;
+while [[ $# -gt 0 ]]; do
+case "$1" in
+  --stow-only) STOW_ONLY=true ;;
+  -n|--dry-run) DRY_RUN=true ;;
   -h|--help)
-    echo "Usage: ${0##*/} [--stow-only]"
+    echo "Usage: ${0##*/} [--stow-only [--dry-run]]"
     echo "Install dependencies and symlink public configs, or only symlink existing configs."
+    echo "--dry-run previews Stow links and requires --stow-only."
     exit 0
     ;;
+  *) echo "Unknown argument: $1" >&2; exit 1 ;;
 esac
-[[ $# -eq 0 ]] || { echo "Unknown argument: $1" >&2; exit 1; }
+shift
+done
+if "$DRY_RUN" && ! "$STOW_ONLY"; then
+  echo "Use --stow-only with --dry-run; dependency installation has no dry-run." >&2
+  exit 1
+fi
 [[ $EUID -ne 0 ]] || { echo "Run as your normal user, without sudo." >&2; exit 1; }
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -27,7 +37,9 @@ done
 stow_configs() {
   # Check all conflicts before creating any links; never adopt private files.
   stow --simulate --verbose --target="$HOME" --dir="$DOTFILES_DIR" "${PACKAGES[@]}"
-  stow --verbose --target="$HOME" --dir="$DOTFILES_DIR" "${PACKAGES[@]}"
+  if ! "$DRY_RUN"; then
+    stow --verbose --target="$HOME" --dir="$DOTFILES_DIR" "${PACKAGES[@]}"
+  fi
 }
 
 if "$STOW_ONLY"; then

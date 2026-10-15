@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+# One entry point for this checkout's setup and maintenance commands.
+set -Eeuo pipefail
+
+BIN_DIR="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
+REPO_DIR="$(cd -- "$BIN_DIR/../../.." && pwd -P)"
+
+usage() {
+  cat <<'EOF'
+Usage: dotfiles <command> [options]
+
+Manage this dotfiles checkout and its installed environment.
+
+Commands:
+  doctor             Check required tools and optional integrations (read-only).
+  status             Show checkout changes and installed configuration links.
+  link [--dry-run]   Symlink configurations without installing dependencies.
+  install            Install dependencies and link configurations.
+  update [options]   Update packages; use --dry-run to preview.
+  clean [options]    Clean package/cache leftovers; Trash is preserved by default.
+  help [command]     Show general help or a command's options.
+  --version          Show the CLI version.
+
+Examples:
+  dotfiles doctor
+  dotfiles link --dry-run
+  dotfiles update --dry-run
+  dotfiles clean --empty-trash --dry-run
+
+Run installation and maintenance as your normal user; sudo is requested as needed.
+EOF
+}
+
+error() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+
+require_no_args() {
+  [[ $# -eq 0 ]] || error "Unexpected argument: $1. Run 'dotfiles help' for usage."
+}
+
+link_status() {
+  local destination="$1" expected="$2" resolved
+  if [[ ! -e "$destination" && ! -L "$destination" ]]; then
+    printf '  missing       %s\n' "$destination"
+  elif [[ -L "$destination" ]]; then
+    resolved="$(readlink -f -- "$destination" || true)"
+    if [[ "$resolved" == "$(readlink -f -- "$expected")" ]]; then
+      printf '  linked        %s\n' "$destination"
+    else
+      printf '  other link    %s\n' "$destination"
+    fi
+  else
+    printf '  local file    %s\n' "$destination"
+  fi
+}
+
+show_status() {
+  local changes line staged=0 modified=0 untracked=0 branch
+  printf 'Checkout: %s\n' "$REPO_DIR"
+  if command -v git >/dev/null 2>&1 && git -C "$REPO_DIR" rev-parse --git-dir >/dev/null 2>&1; then
+    branch="$(git -C "$REPO_DIR" symbolic-ref --quiet --short HEAD || printf 'detached HEAD')"
+    changes="$(git -C "$REPO_DIR" status --porcelain=v1 --untracked-files=normal)"
+    while IFS= read -r line; do
+      [[ -n "$line" ]] || continue
+      if [[ ${line:0:2} == '??' ]]; then
+        untracked=$((untracked + 1))
+      else
+        [[ ${line:0:1} == ' ' ]] || staged=$((staged + 1))
+        [[ ${line:1:1} == ' ' ]] || modified=$((modified + 1))
+      fi
+    done <<< "$changes"
+    printf 'Branch: %s\nChanges: %d staged, %d modified, %d untracked entries\n' "$branch" "$staged" "$modified" "$untracked"
+  else
+    printf 'Git checkout information unavailable.\n'
+  fi
+  printf '\nConfiguration links:\n'
+  link_status "$HOME/.zshrc" "$REPO_DIR/zsh/.zshrc"
+  link_status "$HOME/.wezterm.lua" "$REPO_DIR/wezterm/.wezterm.lua"
+  link_status "$HOME/.config/nvim" "$REPO_DIR/nvim/.config/nvim"
+  link_status "$HOME/.config/oh-my-posh/jandedobbeleer.omp.json" "$REPO_DIR/omp/.config/oh-my-posh/jandedobbeleer.omp.json"
+  link_status "$HOME/.config/autostart/com.github.hluk.copyq.desktop" "$REPO_DIR/copyq/.config/autostart/com.github.hluk.copyq.desktop"
+  link_status "$HOME/.local/bin/dotfiles" "$BIN_DIR/dotfiles"
+  link_status "$HOME/.local/bin/update_system.sh" "$BIN_DIR/update_system.sh"
+  link_status "$HOME/.local/bin/clean_system.sh" "$BIN_DIR/clean_system.sh"
+}
+
+doctor() {
+  local tool missing=0 version
+  printf 'Required tools:\n'
+  for tool in bash git stow zsh; do
+    if command -v "$tool" >/dev/null 2>&1; then
+      printf '  OK    %s\n' "$tool"
+    else
+      printf '  MISSING %s\n' "$tool"
+      missing=$((missing + 1))
+    fi
+  done
+  if (( BASH_VERSINFO[0] < 4 )); then
+    printf '  MISSING Bash 4 or newer is required.\n'
+    missing=$((missing + 1))
+  fi
+  printf '\nOptional tools and package managers:\n'
+  for tool in apt-get snap flatpak brew nvim wezterm copyq oh-my-posh fzf zoxide; do
+    if command -v "$tool" >/dev/null 2>&1; then
+      printf '  OK    %s\n' "$tool"
+    else
+      printf '  absent %s\n' "$tool"
+    fi
+  done
+  if command -v nvim >/dev/null 2>&1; then
+    version="$(nvim --version)"
+    version="${version%%$'\n'*}"
+    if [[ $version =~ ^NVIM[[:space:]]v([0-9]+)\.([0-9]+) ]]; then
+      if (( BASH_REMATCH[1] == 0 && BASH_REMATCH[2] < 11 )); then
+        printf '  WARN  NvChad configuration requires Neovim 0.11 or newer.\n'
+      fi
+    else
+      printf '  WARN  Could not determine the Neovim version.\n'
+    fi
+  fi
+  printf '\n'
+  if (( missing > 0 )); then
+    printf '%d required tool(s) missing. Install them before linking configurations.\n' "$missing"
+    return 1
+  fi
+  printf 'Required tools are available. Use "dotfiles status" to inspect configuration links.\n'
+}
+
+command_name="${1:-help}"
+if [[ $# -gt 0 ]]; then shift; fi
+case "$command_name" in
+  --version) require_no_args "$@"; printf 'dotfiles 0.1.0\n' ;;
+  -h|--help) require_no_args "$@"; usage ;;
+  help)
+    case "${1:-}" in
+      ''|doctor|status|link) [[ $# -le 1 ]] || error 'Too many help arguments'; usage ;;
+      install) shift; require_no_args "$@"; exec bash "$REPO_DIR/install.sh" --help ;;
+      update) shift; require_no_args "$@"; exec "$BIN_DIR/update_system.sh" --help ;;
+      clean) shift; require_no_args "$@"; exec "$BIN_DIR/clean_system.sh" --help ;;
+      *) error "Unknown command: $1" ;;
+    esac
+    ;;
+  doctor)
+    if [[ $# -eq 1 && ( $1 == --help || $1 == -h ) ]]; then usage; exit 0; fi
+    require_no_args "$@"; doctor
+    ;;
+  status)
+    if [[ $# -eq 1 && ( $1 == --help || $1 == -h ) ]]; then usage; exit 0; fi
+    require_no_args "$@"; show_status
+    ;;
+  link) exec bash "$REPO_DIR/install.sh" --stow-only "$@" ;;
+  install) exec bash "$REPO_DIR/install.sh" "$@" ;;
+  update) exec "$BIN_DIR/update_system.sh" "$@" ;;
+  clean) exec "$BIN_DIR/clean_system.sh" "$@" ;;
+  *) error "Unknown command: $command_name. Run 'dotfiles help' for usage." ;;
+esac

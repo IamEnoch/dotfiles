@@ -15,8 +15,8 @@ alias la='ls -A'
 alias l='ls -CF'
 alias grep='grep --color=auto'
 alias garage='cd ~/garage'
-alias update='update_system.sh'
-alias clean='clean_system.sh'
+alias update='dotfiles update'
+alias clean='dotfiles clean'
 
 # Keep PATH entries unique when reloading this file.
 typeset -U path PATH

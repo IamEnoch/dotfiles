@@ -11,7 +11,7 @@ This repository contains configuration files for:
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
 - **CopyQ** – Clipboard history manager, autostarted for desktop sessions
-- **System maintenance** – `update_system.sh` and `clean_system.sh`, installed into `~/.local/bin`
+- **Dotfiles CLI** – Setup, health checks, status, updates, and cleanup through `dotfiles`
 - **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
 ## Structure
@@ -33,7 +33,7 @@ dotfiles/
 ├── omp/
 │   └── .config/oh-my-posh/jandedobbeleer.omp.json   # Prompt theme
 ├── system/
-│   └── .local/bin/                                 # Update and cleanup scripts
+│   └── .local/bin/                                 # CLI and maintenance scripts
 ├── wezterm/
 │   └── .wezterm.lua                                 # WezTerm config
 └── zsh/
@@ -187,10 +187,35 @@ outside this public repository. The installer does not create or change them.
 in regular files under your home directory; do not point it at a missing package
 in this checkout.
 
-## System maintenance
+## Dotfiles CLI
 
-Stow the `system` package to install the scripts into `~/.local/bin`. New shells
-provide `update` and `clean` aliases. Run them as your normal user, without
+The `system` package installs the `dotfiles` command into `~/.local/bin`. The CLI
+uses this checkout directly, including when invoked through a Stow symlink.
+
+```bash
+dotfiles doctor                   # Check tools and optional integrations; no changes
+dotfiles status                   # Show checkout state and configuration links
+dotfiles link --dry-run           # Preview links and report conflicts
+dotfiles link                     # Link configs without installing dependencies
+dotfiles install                  # Install dependencies and link configs
+dotfiles update --dry-run         # Preview package updates and cleanup
+dotfiles clean --dry-run          # Preview cleanup
+dotfiles help update              # Show update options
+dotfiles help clean               # Show cleanup options
+```
+
+`doctor` returns a nonzero exit code when required tools are missing. Optional
+tools are reported separately. `status` reports existing files and links without
+replacing them. `link` checks for conflicts before creating links; it never adopts
+or overwrites existing regular files. Dependency installation has no dry run;
+use `link --dry-run` to preview configuration linking only.
+
+The original `update_system.sh` and `clean_system.sh` entry points remain
+available. New shells also provide `update` and `clean` aliases through the CLI.
+
+### System maintenance
+
+Run the CLI and maintenance scripts as your normal user, without
 prefixing the scripts with sudo; privileged commands request sudo internally.
 
 ```bash
