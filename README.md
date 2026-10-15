@@ -61,7 +61,7 @@ The installation script will:
 - Install WezTerm if its apt repository is already configured; otherwise print its installation link
 - Install oh-my-posh and the MesloLGS Nerd Font
 - Install Node.js + npm (if missing)
-- Install the Codex CLI into `~/.local` via npm without sudo (if missing)
+- Install the standalone Codex CLI binary (if missing): the Homebrew cask when `brew` is available, otherwise the official release into `~/.local/bin`
 - Install Claude Code via the upstream installer
 - Install the `dotnet-ef` global tool (only if `dotnet` is already on the box)
 - Set zsh as the default login shell

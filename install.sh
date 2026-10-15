@@ -87,10 +87,22 @@ if ! command -v node &>/dev/null || ! command -v npm &>/dev/null; then
   sudo apt install -y nodejs npm
 fi
 
-# 5. codex cli
+# 5. codex cli (standalone binary, so Node/OpenSSL upgrades cannot break it)
 if ! command -v codex &>/dev/null; then
   echo "Installing Codex CLI..."
-  npm install --global --prefix "$HOME/.local" @openai/codex
+  if command -v brew &>/dev/null; then
+    brew install --cask codex
+  else
+    case "$(uname -m)" in
+      x86_64) codex_target=x86_64-unknown-linux-musl ;;
+      aarch64|arm64) codex_target=aarch64-unknown-linux-musl ;;
+      *) echo "Unsupported architecture for Codex CLI: $(uname -m)" >&2; exit 1 ;;
+    esac
+    mkdir -p "$HOME/.local/bin"
+    curl -fsSL "https://github.com/openai/codex/releases/latest/download/codex-$codex_target.tar.gz" \
+      | tar -xzO "codex-$codex_target" > "$HOME/.local/bin/codex"
+    chmod +x "$HOME/.local/bin/codex"
+  fi
 fi
 
 # 6. claude code
