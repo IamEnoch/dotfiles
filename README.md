@@ -11,6 +11,7 @@ This repository contains configuration files for:
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
 - **CopyQ** – Clipboard history manager, autostarted for desktop sessions
+- **System maintenance** – `update_system.sh` and `clean_system.sh`, installed into `~/.local/bin`
 - **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
 ## Structure
@@ -31,6 +32,8 @@ dotfiles/
 │   └── .config/nvim/                                # Neovim (NvChad) config tree
 ├── omp/
 │   └── .config/oh-my-posh/jandedobbeleer.omp.json   # Prompt theme
+├── system/
+│   └── .local/bin/                                 # Update and cleanup scripts
 ├── wezterm/
 │   └── .wezterm.lua                                 # WezTerm config
 └── zsh/
@@ -54,14 +57,19 @@ chmod +x install.sh
 
 The installation script will:
 
-- Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `wezterm`, `gh`, `copyq`, `wl-clipboard`
+- Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `gh`, `copyq`, `wl-clipboard`, `fontconfig`, `unzip`
+- Install WezTerm if its apt repository is already configured; otherwise print its installation link
 - Install oh-my-posh and the MesloLGS Nerd Font
 - Install Node.js + npm (if missing)
-- Install the Codex CLI globally via npm
+- Install the Codex CLI into `~/.local` via npm without sudo (if missing)
 - Install Claude Code via the upstream installer
 - Install the `dotnet-ef` global tool (only if `dotnet` is already on the box)
 - Set zsh as the default login shell
-- Run `stow` to create all symlinks under `$HOME`
+- Check for Stow conflicts before creating symlinks under `$HOME`
+
+Run the installer as your normal user. It requests sudo for system package installs. If dependencies are already installed, use `./install.sh --stow-only`.
+
+The NvChad configuration uses `vim.lsp.enable`, which requires Neovim 0.11 or newer. Ubuntu 24.04 ships an older version; configure an appropriate Neovim package source or install a current release before using this editor configuration. The installer does not add third-party apt sources automatically.
 
 ### Manual installation
 
@@ -88,7 +96,7 @@ sudo apt install stow
 
    ```bash
    # Install all configurations
-   stow -vt ~ agents claude copyq nvim omp wezterm zsh
+   stow -vt ~ agents claude copyq nvim omp wezterm zsh system
    ```
 
    ```bash
@@ -100,6 +108,7 @@ sudo apt install stow
    stow -vt ~ omp
    stow -vt ~ wezterm
    stow -vt ~ zsh
+   stow -vt ~ system
    ```
 
    - `-t ~` = target is your home folder (where symlinks will be created)
@@ -147,7 +156,7 @@ python3 -m venv "$tmpdir/venv"
 
 for d in agents/.agents/skills/*; do
   [ -f "$d/SKILL.md" ] || continue
-  "$tmpdir/venv/bin/python" $HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py "$d"
+  "$tmpdir/venv/bin/python" "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" "$d"
 done
 
 rm -rf "$tmpdir"
@@ -170,6 +179,60 @@ npx skills list -g
 
 After adding/updating, commit the changes in `agents/.agents/`.
 
+## Private machine configuration
+
+Git configuration, identities, signing keys, credentials, and trust settings are
+outside this public repository. The installer does not create or change them.
+`git/`, `.gitconfig`, and `.config/git/` are ignored. Keep your local Git setup
+in regular files under your home directory; do not point it at a missing package
+in this checkout.
+
+## System maintenance
+
+Stow the `system` package to install the scripts into `~/.local/bin`. New shells
+provide `update` and `clean` aliases. Run them as your normal user, without
+prefixing the scripts with sudo; privileged commands request sudo internally.
+
+```bash
+update --dry-run                 # Preview updates and cleanup
+update                           # apt upgrade, Snap, Flatpak, Homebrew, then cleanup
+update --no-clean                # Update without cleanup/autoremove
+update --skip-brew               # Skip Homebrew updates and cleanup
+update --full-upgrade            # Explicitly allow apt package removals
+update --include-npm             # Also update global npm packages
+update --include-pip             # Also update user pip packages, if Python permits it
+clean --dry-run                  # Preview cleanup
+clean --empty-trash              # Explicitly and permanently empty Trash too
+clean --journal-age 14d          # Keep two weeks of archived journal logs
+clean --skip-journal             # Preserve journal logs
+```
+
+Cleanup removes unused apt packages, apt download caches, thumbnails, archived
+journal logs older than seven days, unused Flatpak runtimes, Snap download cache,
+and old Homebrew downloads/versions. Trash is preserved by default. Individual
+cleanup stages have skip flags; use `clean --help` for the complete list.
+
+Dry runs print the commands without performing updates, querying package indexes,
+or deleting files. They are previews, not dependency-resolution simulations.
+Pip, global npm, and Pop!_OS release upgrades remain opt-in. Externally managed
+Python installations may reject user pip upgrades; the script reports the failure
+and does not bypass Python's package protections. A failed stage stops the run.
+Native Claude Code, .NET tools, editor plugins, and shared agent skills have their
+own update workflows; they are not upgraded by this script.
+
+The scripts resolve sibling files through symlinks, so an existing
+`~/update_system.sh` or `~/clean_system.sh` can link to its counterpart in
+`~/.local/bin` rather than keeping a separate copy.
+
+Run the isolated checks with:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+The checks use temporary home directories and mocked package managers. They do
+not perform actual system maintenance or validate a fresh-machine installation.
+
 ## Uninstallation
 
 To remove symlinks created by stow:
@@ -182,7 +245,9 @@ stow -Dvt ~ nvim
 stow -Dvt ~ omp
 stow -Dvt ~ wezterm
 stow -Dvt ~ zsh
+stow -Dvt ~ copyq
+stow -Dvt ~ system
 
 # Or uninstall all packages at once
-stow -Dvt ~ agents claude nvim omp wezterm zsh
+stow -Dvt ~ agents claude copyq nvim omp wezterm zsh system
 ```

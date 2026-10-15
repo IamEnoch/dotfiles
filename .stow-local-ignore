@@ -3,5 +3,7 @@
 ^/\.stow-local-ignore$
 ^/README\.md$
 ^/install\.sh$
+^/tests$
+^/\.github$
 ^/LICENSE$
 \.DS_Store
