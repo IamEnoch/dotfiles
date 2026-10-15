@@ -15,8 +15,8 @@ alias la='ls -A'
 alias l='ls -CF'
 alias grep='grep --color=auto'
 alias garage='cd ~/garage'
-alias update='dotfiles update'
-alias clean='dotfiles clean'
+alias update='zotu update'
+alias clean='zotu clean'
 
 # Keep PATH entries unique when reloading this file.
 typeset -U path PATH

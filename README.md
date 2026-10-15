@@ -11,7 +11,7 @@ This repository contains configuration files for:
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
 - **CopyQ** – Clipboard history manager, autostarted for desktop sessions
-- **Dotfiles CLI** – Setup, health checks, status, updates, and cleanup through `dotfiles`
+- **Zotu CLI** – Setup, health checks, status, updates, and cleanup through `zotu`
 - **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
 ## Structure
@@ -187,21 +187,21 @@ outside this public repository. The installer does not create or change them.
 in regular files under your home directory; do not point it at a missing package
 in this checkout.
 
-## Dotfiles CLI
+## Zotu CLI
 
-The `system` package installs the `dotfiles` command into `~/.local/bin`. The CLI
+The `system` package installs the `zotu` command into `~/.local/bin`. The CLI
 uses this checkout directly, including when invoked through a Stow symlink.
 
 ```bash
-dotfiles doctor                   # Check tools and optional integrations; no changes
-dotfiles status                   # Show checkout state and configuration links
-dotfiles link --dry-run           # Preview links and report conflicts
-dotfiles link                     # Link configs without installing dependencies
-dotfiles install                  # Install dependencies and link configs
-dotfiles update --dry-run         # Preview package updates and cleanup
-dotfiles clean --dry-run          # Preview cleanup
-dotfiles help update              # Show update options
-dotfiles help clean               # Show cleanup options
+zotu doctor                   # Check tools and optional integrations; no changes
+zotu status                   # Show checkout state and configuration links
+zotu link --dry-run           # Preview links and report conflicts
+zotu link                     # Link configs without installing dependencies
+zotu install                  # Install dependencies and link configs
+zotu update --dry-run         # Preview package updates and cleanup
+zotu clean --dry-run          # Preview cleanup
+zotu help update              # Show update options
+zotu help clean               # Show cleanup options
 ```
 
 `doctor` returns a nonzero exit code when required tools are missing. Optional

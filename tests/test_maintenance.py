@@ -181,16 +181,16 @@ fi
         self.assertTrue(self.trash.exists())
 
     def test_cli_help_version_and_invalid_commands(self):
-        self.assertIn("doctor", self.run_script("dotfiles", "--help").stdout)
-        self.assertIn("dotfiles 0.1.0", self.run_script("dotfiles", "--version").stdout)
-        self.assertIn("--empty-trash", self.run_script("dotfiles", "help", "clean").stdout)
-        self.assert_ok(self.run_script("dotfiles", "doctor", "--help"))
-        self.assertNotEqual(self.run_script("dotfiles", "unknown").returncode, 0)
-        self.assertNotEqual(self.run_script("dotfiles", "status", "unexpected").returncode, 0)
+        self.assertIn("doctor", self.run_script("zotu", "--help").stdout)
+        self.assertIn("zotu 0.1.0", self.run_script("zotu", "--version").stdout)
+        self.assertIn("--empty-trash", self.run_script("zotu", "help", "clean").stdout)
+        self.assert_ok(self.run_script("zotu", "doctor", "--help"))
+        self.assertNotEqual(self.run_script("zotu", "unknown").returncode, 0)
+        self.assertNotEqual(self.run_script("zotu", "status", "unexpected").returncode, 0)
         self.assertEqual(self.commands(), "")
 
     def test_cli_update_forwards_dry_run_and_no_clean(self):
-        result = self.run_script("dotfiles", "update", "--dry-run", "--no-clean", "--skip-brew")
+        result = self.run_script("zotu", "update", "--dry-run", "--no-clean", "--skip-brew")
         self.assert_ok(result)
         self.assertIn("apt-get upgrade", result.stdout)
         self.assertNotIn("brew upgrade", result.stdout)
@@ -199,41 +199,41 @@ fi
         self.assertTrue(self.thumbnail.exists())
 
     def test_cli_clean_forwards_explicit_trash_option(self):
-        self.assert_ok(self.run_script("dotfiles", "clean", "--empty-trash", "--skip-thumbnails"))
+        self.assert_ok(self.run_script("zotu", "clean", "--empty-trash", "--skip-thumbnails"))
         self.assertFalse(self.trash.exists())
         self.assertTrue(self.thumbnail.exists())
 
     def test_cli_status_reports_links_without_changing_them(self):
         shell_link = self.home / ".zshrc"
         shell_link.symlink_to(REPO / "zsh/.zshrc")
-        result = self.run_script("dotfiles", "status")
+        result = self.run_script("zotu", "status")
         self.assert_ok(result)
         self.assertIn("linked", result.stdout)
         self.assertIn(str(shell_link), result.stdout)
         self.assertIn("missing", result.stdout)
         self.assertEqual(self.commands(), "")
-        self.assertFalse((self.home / ".local/bin/dotfiles").exists())
+        self.assertFalse((self.home / ".local/bin/zotu").exists())
 
     def test_cli_doctor_reports_missing_requirements(self):
         for tool in ("bash", "readlink", "dirname"):
             (self.bin / tool).symlink_to(shutil.which(tool))
-        result = self.run_script("dotfiles", "doctor", PATH=str(self.bin))
+        result = self.run_script("zotu", "doctor", PATH=str(self.bin))
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("MISSING stow", result.stdout)
         self.assertIn("required tool(s) missing", result.stdout)
         self.assertEqual(self.commands(), "")
 
     def test_cli_install_rejects_unsupported_dry_run_before_actions(self):
-        result = self.run_script("dotfiles", "install", "--dry-run")
+        result = self.run_script("zotu", "install", "--dry-run")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("dependency installation has no dry-run", result.stderr)
         self.assertEqual(self.commands(), "")
 
     @unittest.skipUnless(shutil.which("stow"), "GNU Stow is required")
     def test_cli_link_dry_run_does_not_create_links(self):
-        self.assert_ok(self.run_script("dotfiles", "link", "--dry-run"))
+        self.assert_ok(self.run_script("zotu", "link", "--dry-run"))
         self.assertFalse((self.home / ".zshrc").exists())
-        self.assertFalse((self.home / ".local/bin/dotfiles").exists())
+        self.assertFalse((self.home / ".local/bin/zotu").exists())
         self.assertEqual(self.commands(), "")
 
     @unittest.skipUnless(shutil.which("stow"), "GNU Stow is required")
