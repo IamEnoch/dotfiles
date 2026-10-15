@@ -15,34 +15,47 @@ alias la='ls -A'
 alias l='ls -CF'
 alias grep='grep --color=auto'
 alias garage='cd ~/garage'
-alias update='sudo apt update && sudo apt upgrade -y'
+alias update='zotu update'
+alias clean='zotu clean'
 
-# PATH (ported from .bashrc / .profile)
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:/opt/flutter/bin"
-export PATH="/snap/bin:$PATH"
+# Keep PATH entries unique when reloading this file.
+typeset -U path PATH
+path=("$HOME/.local/bin" $path /opt/flutter/bin /snap/bin)
 export DOTNET_ROOT="$HOME/.dotnet"
-export PATH="$DOTNET_ROOT:$PATH"
-export PATH="$PATH:$HOME/.dotnet/tools"
-export PATH="/opt/android-studio/bin:$PATH"
-export PATH="$HOME/.aspire/bin:$PATH"
+path=("$DOTNET_ROOT" "$HOME/.aspire/bin" /opt/android-studio/bin $path "$HOME/.dotnet/tools")
 
 # Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 # ASP.NET dev certs
-export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:${SSL_CERT_DIR:-/etc/ssl/certs}"
+if [[ ":${SSL_CERT_DIR:-}:" != *":$HOME/.aspnet/dev-certs/trust:"* ]]; then
+  export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:${SSL_CERT_DIR:-/etc/ssl/certs}"
+fi
 
 # oh-my-posh prompt
-eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/jandedobbeleer.omp.json)"
+if (( $+commands[oh-my-posh] )); then
+  eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/jandedobbeleer.omp.json)"
+fi
 
 # fzf - Ctrl+R (history), Ctrl+T (files), Alt+C (cd) + completion
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-source /usr/share/doc/fzf/examples/completion.zsh
+if [[ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+fi
+if [[ -r /usr/share/doc/fzf/examples/completion.zsh ]]; then
+  source /usr/share/doc/fzf/examples/completion.zsh
+fi
 
 # zoxide - `z <partial>` to jump, `zi` for interactive picker
-eval "$(zoxide init zsh)"
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+fi
 
 # Plugins - keep these LAST (syntax-highlighting must be last of the two)
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+if [[ -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
