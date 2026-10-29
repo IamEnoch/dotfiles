@@ -24,6 +24,12 @@ path=("$HOME/.local/bin" $path /opt/flutter/bin /snap/bin)
 export DOTNET_ROOT="$HOME/.dotnet"
 path=("$DOTNET_ROOT" "$HOME/.aspire/bin" /opt/android-studio/bin $path "$HOME/.dotnet/tools")
 
+# Android SDK (shared by Flutter and Android Studio). platform-tools goes first so
+# the SDK's adb wins over the older /usr/bin/adb from apt.
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+path=("$ANDROID_HOME/platform-tools" "$ANDROID_HOME/cmdline-tools/latest/bin" $path)
+
 # Homebrew
 if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
