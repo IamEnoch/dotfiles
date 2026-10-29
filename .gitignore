@@ -8,3 +8,6 @@ git/
 __pycache__/
 *.py[cod]
 .venv/
+
+# Claude Code account skill sync writes here through ~/.claude/skills
+agents/.agents/skills/synced/
