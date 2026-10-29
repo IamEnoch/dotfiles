@@ -5,7 +5,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(zsh nvim wezterm omp agents claude copyq system)
+PACKAGES=(zsh nvim wezterm omp agents claude copyq hokum system)
 STOW_ONLY=false
 DRY_RUN=false
 
@@ -105,13 +105,32 @@ if ! command -v codex &>/dev/null; then
   fi
 fi
 
-# 6. claude code
+# 6. hokum notification daemon (COSMIC hands it the slot via hokum/.local/bin/cosmic-notifications)
+HOKUM_VERSION=0.1.2
+if ! command -v hokum &>/dev/null; then
+  case "$(uname -m)" in
+    x86_64) hokum_arch=x64 ;;
+    aarch64|arm64) hokum_arch=arm64 ;;
+    *) hokum_arch="" ;;
+  esac
+  if [[ -n "$hokum_arch" ]]; then
+    echo "Installing Hokum $HOKUM_VERSION..."
+    mkdir -p "$HOME/.local/bin"
+    curl -fsSL -o "$HOME/.local/bin/hokum" \
+      "https://github.com/anomalyco/hokum/releases/download/v$HOKUM_VERSION/hokum-$HOKUM_VERSION-linux-$hokum_arch"
+    chmod +x "$HOME/.local/bin/hokum"
+  else
+    echo "Hokum has no build for $(uname -m), skipping"
+  fi
+fi
+
+# 7. claude code
 if ! command -v claude &>/dev/null; then
   echo "Installing Claude Code..."
   curl -fsSL https://claude.ai/install.sh | bash
 fi
 
-# 7. dotnet-ef (skipped if dotnet missing)
+# 8. dotnet-ef (skipped if dotnet missing)
 if command -v dotnet &>/dev/null; then
   if ! dotnet tool list --global 2>/dev/null | grep -q '^dotnet-ef'; then
     echo "Installing dotnet-ef..."
@@ -121,13 +140,13 @@ else
   echo "dotnet not found, skipping dotnet-ef"
 fi
 
-# 8. default shell
+# 9. default shell
 if [ "$(getent passwd "$(id -un)" | awk -F: '{print $NF}')" != "$(command -v zsh)" ]; then
   echo "Setting default shell to zsh..."
   chsh -s "$(command -v zsh)"
 fi
 
-# 9. stow
+# 10. stow
 echo "Stowing packages: ${PACKAGES[*]}"
 stow_configs
 

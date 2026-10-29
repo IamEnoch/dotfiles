@@ -78,6 +78,7 @@ show_status() {
   link_status "$HOME/.config/nvim" "$REPO_DIR/nvim/.config/nvim"
   link_status "$HOME/.config/oh-my-posh/jandedobbeleer.omp.json" "$REPO_DIR/omp/.config/oh-my-posh/jandedobbeleer.omp.json"
   link_status "$HOME/.config/autostart/com.github.hluk.copyq.desktop" "$REPO_DIR/copyq/.config/autostart/com.github.hluk.copyq.desktop"
+  link_status "$HOME/.local/bin/cosmic-notifications" "$REPO_DIR/hokum/.local/bin/cosmic-notifications"
   link_status "$HOME/.local/bin/zotu" "$BIN_DIR/zotu"
   link_status "$HOME/.local/bin/update_system.sh" "$BIN_DIR/update_system.sh"
   link_status "$HOME/.local/bin/clean_system.sh" "$BIN_DIR/clean_system.sh"
@@ -99,7 +100,7 @@ doctor() {
     missing=$((missing + 1))
   fi
   printf '\nOptional tools and package managers:\n'
-  for tool in apt-get snap flatpak brew nvim wezterm copyq oh-my-posh fzf zoxide; do
+  for tool in apt-get snap flatpak brew nvim wezterm copyq hokum oh-my-posh fzf zoxide; do
     if command -v "$tool" >/dev/null 2>&1; then
       printf '  OK    %s\n' "$tool"
     else

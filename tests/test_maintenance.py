@@ -261,7 +261,7 @@ fi
 
     @unittest.skipUnless(shutil.which("stow"), "GNU Stow is required")
     def test_stow_installs_public_packages_without_git_config(self):
-        packages = ["agents", "claude", "copyq", "nvim", "omp", "system", "wezterm", "zsh"]
+        packages = ["agents", "claude", "copyq", "hokum", "nvim", "omp", "system", "wezterm", "zsh"]
         result = subprocess.run(
             ["stow", f"--dir={REPO}", f"--target={self.home}", *packages],
             capture_output=True, text=True,
@@ -269,6 +269,7 @@ fi
         self.assert_ok(result)
         self.assertTrue((self.home / ".local/bin/update_system.sh").is_file())
         self.assertTrue((self.home / ".zshrc").is_file())
+        self.assertTrue((self.home / ".local/bin/cosmic-notifications").is_file())
         self.assertFalse((self.home / ".gitconfig").exists())
 
 

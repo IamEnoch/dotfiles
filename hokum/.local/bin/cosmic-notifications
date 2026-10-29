@@ -1,0 +1,14 @@
+#!/bin/sh
+# Shim: cosmic-session spawns `cosmic-notifications` by name, and ~/.local/bin
+# is first on its PATH, so this runs instead of /usr/bin/cosmic-notifications.
+# It hands the notification slot (org.freedesktop.Notifications) to Hokum.
+#
+# Go back to stock COSMIC notifications:
+#   touch ~/.config/hokum/disabled && pkill -x hokum
+# (cosmic-session respawns this shim, which then execs the real daemon.)
+
+if [ ! -e "$HOME/.config/hokum/disabled" ] && command -v hokum >/dev/null 2>&1; then
+    exec hokum service --replace
+fi
+
+exec /usr/bin/cosmic-notifications "$@"

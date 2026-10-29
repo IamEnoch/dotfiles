@@ -11,6 +11,7 @@ This repository contains configuration files for:
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
 - **CopyQ** – Clipboard history manager, autostarted for desktop sessions
+- **Hokum** – Notification daemon that replaces COSMIC's built-in notification popups
 - **Zotu CLI** – Setup, health checks, status, updates, and cleanup through `zotu`
 - **Agent skills** – Shared skill store under `~/.agents/skills/`, surfaced to Claude Code via `~/.claude/skills`. Managed with [`npx skills`](https://github.com/vercel-labs/skills); lockfile committed for reproducible installs.
 
@@ -28,6 +29,10 @@ dotfiles/
 ├── copyq/
 │   └── .config/autostart/
 │       └── com.github.hluk.copyq.desktop            # Start clipboard history on login
+├── hokum/
+│   └── .local/
+│       ├── bin/cosmic-notifications                 # Shim that hands COSMIC's notifier slot to Hokum
+│       └── share/applications/hokum.desktop         # Launcher entry for Hokum's settings window
 ├── nvim/
 │   └── .config/nvim/                                # Neovim (NvChad) config tree
 ├── omp/
@@ -61,6 +66,7 @@ The installation script will:
 - Install WezTerm if its apt repository is already configured; otherwise print its installation link
 - Install oh-my-posh and the MesloLGS Nerd Font
 - Install Node.js + npm (if missing)
+- Install the pinned Hokum release binary into `~/.local/bin` (if missing)
 - Install the standalone Codex CLI binary (if missing): the Homebrew cask when `brew` is available, otherwise the official release into `~/.local/bin`
 - Install Claude Code via the upstream installer
 - Install the `dotnet-ef` global tool (only if `dotnet` is already on the box)
@@ -96,7 +102,7 @@ sudo apt install stow
 
    ```bash
    # Install all configurations
-   stow -vt ~ agents claude copyq nvim omp wezterm zsh system
+   stow -vt ~ agents claude copyq hokum nvim omp wezterm zsh system
    ```
 
    ```bash
@@ -104,6 +110,7 @@ sudo apt install stow
    stow -vt ~ agents
    stow -vt ~ claude
    stow -vt ~ copyq
+   stow -vt ~ hokum
    stow -vt ~ nvim
    stow -vt ~ omp
    stow -vt ~ wezterm
@@ -178,6 +185,26 @@ npx skills list -g
 ```
 
 After adding/updating, commit the changes in `agents/.agents/`.
+
+## Hokum notifications
+
+[Hokum](https://hokum.app) replaces COSMIC's notification popups. `cosmic-session`
+starts `cosmic-notifications` by name, and `~/.local/bin` comes first on its PATH, so
+the `hokum` package's `cosmic-notifications` shim runs instead and execs
+`hokum service --replace`. `cosmic-session` still supervises it and restarts it if it
+crashes. Nothing under `/usr` changes. Hokum's own systemd unit is not used, so only
+one thing starts a notifier.
+
+```bash
+hokum                                                            # Settings window
+hokum dnd toggle                                                 # Do not disturb
+touch ~/.config/hokum/disabled && pkill -x hokum                 # Back to COSMIC notifications
+rm ~/.config/hokum/disabled && kill "$(pgrep -x cosmic-notifica)"  # Back to Hokum
+```
+
+While Hokum runs, COSMIC's panel notification list and its do-not-disturb setting
+stay empty because they only talk to COSMIC's own daemon. To upgrade Hokum, bump
+`HOKUM_VERSION` in `install.sh` and replace `~/.local/bin/hokum`.
 
 ## Private machine configuration
 
