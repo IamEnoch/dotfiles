@@ -100,7 +100,7 @@ doctor() {
     missing=$((missing + 1))
   fi
   printf '\nOptional tools and package managers:\n'
-  for tool in apt-get snap flatpak brew nvim wezterm hokum oh-my-posh fzf zoxide; do
+  for tool in apt-get snap flatpak brew nvim wezterm helium hokum oh-my-posh fzf zoxide; do
     if command -v "$tool" >/dev/null 2>&1; then
       printf '  OK    %s\n' "$tool"
     else

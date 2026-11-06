@@ -10,6 +10,7 @@ This repository contains configuration files for:
 - **Neovim** – NvChad-derived editor config
 - **WezTerm** – Terminal emulator
 - **oh-my-posh** – Prompt theme (Jan De Dobbeleer)
+- **Helium** – Browser, installed from its upstream apt repository so `zotu update` keeps it current
 - **CopyQ** – Clipboard history manager, autostarted for desktop sessions
 - **Hokum** – Notification daemon that replaces COSMIC's built-in notification popups
 - **Zotu CLI** – Setup, health checks, status, updates, and cleanup through `zotu`
@@ -64,6 +65,7 @@ The installation script will:
 
 - Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `gh`, `wl-clipboard`, `fontconfig`, `unzip`
 - Install CopyQ from Flathub (`com.github.hluk.copyq`) so `zotu update` keeps it current via `flatpak update`
+- Add the Helium apt repository (`pkg.helium.computer`) and install `helium-bin`, so `zotu update` upgrades it with apt
 - Install WezTerm if its apt repository is already configured; otherwise print its installation link
 - Install oh-my-posh and the MesloLGS Nerd Font
 - Install Node.js + npm (if missing)

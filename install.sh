@@ -68,6 +68,18 @@ else
   echo "flatpak not found; install it, then run: flatpak install --user flathub com.github.hluk.copyq"
 fi
 
+# Helium browser comes from its upstream apt repository, so `zotu update`
+# upgrades it with the rest of the apt packages.
+if [[ ! -f /etc/apt/sources.list.d/helium.list ]]; then
+  echo "Adding the Helium apt repository..."
+  curl -fsSL https://raw.githubusercontent.com/imputnet/helium-linux/main/pubkey.asc \
+    | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/helium.gpg
+  echo "deb [signed-by=/usr/share/keyrings/helium.gpg] https://pkg.helium.computer/deb stable main" \
+    | sudo tee /etc/apt/sources.list.d/helium.list >/dev/null
+  sudo apt update
+fi
+sudo apt install -y helium-bin
+
 # WezTerm needs its upstream apt repository on a fresh Ubuntu installation.
 if ! command -v wezterm &>/dev/null; then
   if apt-cache show wezterm >/dev/null 2>&1; then
