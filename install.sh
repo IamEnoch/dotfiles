@@ -57,7 +57,16 @@ sudo apt install -y \
   zsh zsh-autosuggestions zsh-syntax-highlighting \
   fzf zoxide eza bat ripgrep fd-find \
   neovim gh \
-  copyq wl-clipboard
+  wl-clipboard
+
+# CopyQ comes from Flathub: distro and PPA builds lag far behind upstream,
+# and `zotu update` keeps Flatpak apps current.
+if command -v flatpak &>/dev/null; then
+  flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  flatpak install --user -y --noninteractive flathub com.github.hluk.copyq
+else
+  echo "flatpak not found; install it, then run: flatpak install --user flathub com.github.hluk.copyq"
+fi
 
 # WezTerm needs its upstream apt repository on a fresh Ubuntu installation.
 if ! command -v wezterm &>/dev/null; then

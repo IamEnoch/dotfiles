@@ -62,7 +62,8 @@ chmod +x install.sh
 
 The installation script will:
 
-- Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `gh`, `copyq`, `wl-clipboard`, `fontconfig`, `unzip`
+- Install system packages via apt: `stow`, `git`, `curl`, `build-essential`, `zsh`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `fzf`, `zoxide`, `eza`, `bat`, `ripgrep`, `fd-find`, `neovim`, `gh`, `wl-clipboard`, `fontconfig`, `unzip`
+- Install CopyQ from Flathub (`com.github.hluk.copyq`) so `zotu update` keeps it current via `flatpak update`
 - Install WezTerm if its apt repository is already configured; otherwise print its installation link
 - Install oh-my-posh and the MesloLGS Nerd Font
 - Install Node.js + npm (if missing)

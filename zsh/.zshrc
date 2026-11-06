@@ -17,6 +17,7 @@ alias grep='grep --color=auto'
 alias garage='cd ~/garage'
 alias update='zotu update'
 alias clean='zotu clean'
+alias copyq='flatpak run com.github.hluk.copyq'
 
 # Keep PATH entries unique when reloading this file.
 typeset -U path PATH

@@ -100,13 +100,21 @@ doctor() {
     missing=$((missing + 1))
   fi
   printf '\nOptional tools and package managers:\n'
-  for tool in apt-get snap flatpak brew nvim wezterm copyq hokum oh-my-posh fzf zoxide; do
+  for tool in apt-get snap flatpak brew nvim wezterm hokum oh-my-posh fzf zoxide; do
     if command -v "$tool" >/dev/null 2>&1; then
       printf '  OK    %s\n' "$tool"
     else
       printf '  absent %s\n' "$tool"
     fi
   done
+  if [[ -d "$HOME/.local/share/flatpak/app/com.github.hluk.copyq" || -d /var/lib/flatpak/app/com.github.hluk.copyq ]]; then
+    printf '  OK    copyq (Flatpak)\n'
+  else
+    printf '  absent copyq (Flatpak com.github.hluk.copyq)\n'
+  fi
+  if [[ -x /usr/bin/copyq ]]; then
+    printf '  WARN  apt copyq is also installed; remove it with: sudo apt remove copyq copyq-plugins\n'
+  fi
   if command -v nvim >/dev/null 2>&1; then
     version="$(nvim --version)"
     version="${version%%$'\n'*}"
