@@ -143,6 +143,7 @@ Currently tracked skills include:
 - `aspire` from `github/awesome-copilot` for .NET Aspire CLI, AppHost orchestration, dashboard, MCP, integrations, and deployment work.
 - `find-docs` from `upstash/context7` for documentation lookup.
 - `docx`, `frontend-design`, `next-best-practices`, `dotnet-backend-patterns`, `nuget-manager`, `excalidraw-diagram`, `supabase-postgres-best-practices`, `svg-logo-designer`, and `to-prd`.
+- Local (not from `npx skills`): `html-to-canva` (HTML print/social design → editable, measured Canva copy; creates its own venv on first run) and `church-media-design` (design standard and procedure for PEFA Magina Cathedral posters, notices, social sets, projection and livestream slides, QR codes).
 
 ### Update workflow
 

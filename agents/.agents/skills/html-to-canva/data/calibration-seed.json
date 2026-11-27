@@ -1,0 +1,13 @@
+{
+  "_about": "Median vertical offset Canva applies to a PPTX text box, as a fraction of the font size (em). Measured on the PEFA booklet import, 456 boxes, Nov 2026. Negative = Canva sets the text higher, so the builder lowers the box. Keyed 'Canva font name|bold|italic'. Used only until a box is measured (cv.py calibrate).",
+  "*": -0.1,
+  "Montserrat|regular|normal": -0.162,
+  "Montserrat Medium|regular|normal": -0.137,
+  "Montserrat|bold|normal": -0.126,
+  "Cormorant Garamond|bold|normal": -0.108,
+  "Cormorant Garamond|bold|italic": -0.009,
+  "Cormorant Garamond Medium|regular|normal": -0.010,
+  "Cormorant Garamond Medium|regular|italic": -0.028,
+  "Cinzel|bold|normal": -0.088,
+  "Pinyon Script|regular|normal": -0.025
+}

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Runs cv.py inside the skill's own virtualenv, creating it on first use.
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VENV="${CV_VENV:-$DIR/.venv}"
+if [ ! -x "$VENV/bin/python" ] || ! "$VENV/bin/python" -c 'import pptx, pymupdf, fontTools, PIL' 2>/dev/null; then
+  echo "setting up $VENV (python-pptx, pymupdf, fonttools, pillow)..." >&2
+  python3 -m venv "$VENV"
+  "$VENV/bin/pip" install -q python-pptx pymupdf fonttools pillow >&2
+fi
+exec "$VENV/bin/python" "$DIR/scripts/cv.py" "$@"
