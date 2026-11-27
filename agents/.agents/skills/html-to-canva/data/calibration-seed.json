@@ -1,0 +1,13 @@
+{
+  "_about": "Neutral starting offsets, not a measurement of your design. Each value is the vertical offset Canva applies to a PPTX text box, as a fraction of the font size (em); negative = Canva sets the text higher, so the builder lowers the box. Keys are 'Canva font name|bold or regular|italic or normal'. '*' is the fallback for every font not listed. The named entries are medians from one A4 import of common open-source fonts and only make a first import land closer. Any box measured by `cv calibrate <canva-export.pdf>` uses the design's own calib.json instead, so re-calibrate for each new design rather than editing this file.",
+  "*": -0.1,
+  "Montserrat|regular|normal": -0.162,
+  "Montserrat Medium|regular|normal": -0.137,
+  "Montserrat|bold|normal": -0.126,
+  "Cormorant Garamond|bold|normal": -0.108,
+  "Cormorant Garamond|bold|italic": -0.009,
+  "Cormorant Garamond Medium|regular|normal": -0.010,
+  "Cormorant Garamond Medium|regular|italic": -0.028,
+  "Cinzel|bold|normal": -0.088,
+  "Pinyon Script|regular|normal": -0.025
+}
